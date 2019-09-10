@@ -21,8 +21,9 @@ https://hackernoon.com/the-100-correct-way-to-split-your-chunks-with-webpack-f8a
 [x] 根据入口进行合并打包
 [x] hash文件检测注入
 [x] 静态资源
+[ ] 打包动画
 [ ] 打包时间过长
-[ ] tree sharking 树抖
+[ ] tree sharking 树抖 webpack自带？写的时候是否需要更换方式
 
 ### vue
 [x] vue-ssr

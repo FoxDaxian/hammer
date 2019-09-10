@@ -49,7 +49,7 @@ const defaultRender = async config => {
         }
     }
 
-    node_modules = utils.exist(path.join(distDir, node_modules))
+    node_modules = typeof node_modules === 'string' && utils.exist(path.join(distDir, node_modules))
         ? `<script src="${node_modules}" ></script>`
         : '';
     main_css = utils.exist(path.join(distDir, main_css))
@@ -58,7 +58,7 @@ const defaultRender = async config => {
     main_js = utils.exist(path.join(distDir, main_js))
         ? `<script src="${main_js}" ></script>`
         : '';
-    common_node_modules = utils.exist(path.join(distDir, common_node_modules))
+    common_node_modules = typeof common_node_modules === 'string' && utils.exist(path.join(distDir, common_node_modules))
         ? `<script src="${common_node_modules}" ></script>`
         : '';
 

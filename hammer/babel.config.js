@@ -12,15 +12,20 @@ require('regenerator-runtime/runtime');
 const envConf = utils.merge(
     require(path.join(cwd, 'config', 'default.js')),
     require(path.join(cwd, 'config', `${process.env.NODE_ENV}.js`))
-)
+);
 
 require('@babel/register')({
     babelrc: false,
-    presets: [[require.resolve('@babel/preset-env'), {
-        targets: {
-            node: 'current'
-        }
-    }]],
+    presets: [
+        [
+            require.resolve('@babel/preset-env'),
+            {
+                targets: {
+                    node: 'current'
+                }
+            }
+        ]
+    ],
     plugins: [
         // TODO: 为什么classname没有正常编译
         require.resolve('babel-plugin-transform-vue-jsx'),

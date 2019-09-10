@@ -1,12 +1,9 @@
 import './index.css';
 import btn from '@components/btn';
-import lodash from 'lodash';
+import merge from 'lodash/merge';
+// import lodash from 'lodash';
 import {mapState, mapMutations} from 'vuex';
-// 引入一个alias后，如果报错，那么打包就不更新了，得重启才行，为什么？
-// 还有config，还得给配置个index.js，有没有办法优化？
-// import config from '@config';
-// import client from '@client';
-// console.log(config);
+// console.log(lodash);
 
 export default {
     data() {
@@ -34,11 +31,10 @@ export default {
         },
         ...mapMutations(['increment'])
     },
-    mounted() {
-    },
+    mounted() {},
     render() {
         return (
-            <div id='app'>
+            <div id='app' class='appclass'>
                 {this.test}
                 <btn />
                 <btn />
@@ -48,8 +44,8 @@ export default {
                 <button onClick={this.click}>跳转</button>
                 <button onClick={this.click1}>跳转1</button>
                 <button onClick={this.testStore}>store{this.count}</button>
-                
-                <img src='/img/qrcode.png' alt=""/>
+
+                <img src='/img/qrcode.png' alt='' />
             </div>
         );
     }

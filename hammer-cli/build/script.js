@@ -2,7 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const merge = require('webpack-merge');
-const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const crypto = require('crypto');
 const HappyPack = require('happypack');
@@ -80,8 +79,15 @@ module.exports = (config, hammerConf) => {
             ]
         },
         plugins: [
+            new webpack.DefinePlugin({
+                'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+            }),
             new CopyPlugin([
-                {from: hammerConf.path.static, to: hammerConf.path.dist},
+                {
+                    from: hammerConf.path.static,
+                    to: hammerConf.path.dist,
+                    ignore: ['.DS_Store']
+                }
             ]),
             new HappyPack({
                 id: 'babel-loader',
@@ -152,6 +158,32 @@ module.exports = (config, hammerConf) => {
             aggregateTimeout: 300,
             ignored: ['server/**/*.js', 'node_modules', 'dist/**'],
             poll: 1000
+        },
+        externals: {
+            // 依赖vue cdn
+            vue: 'Vue'
+        },
+        optimization: {
+            splitChunks: {
+                cacheGroups: {
+                    node_modules: {
+                        test: /[\\/]node_modules[\\/]/,
+                        chunks: 'initial',
+                        priority: 2,
+                        // used by chunkFilename
+                        name(module, chunks, cacheGroupKey) {
+                            if (
+                                chunks.length ===
+                                Object.keys(config.entry).length
+                            ) {
+                                return `common/vendors/${cacheGroupKey}`;
+                            } else {
+                                return `${chunks[0].name}/vendors/${cacheGroupKey}`;
+                            }
+                        }
+                    }
+                }
+            }
         }
     };
     webpack(
@@ -162,66 +194,11 @@ module.exports = (config, hammerConf) => {
                 ? // 这是生产环境
                   {
                       // TODO: 把下面的换到上面来
-                      devtool: 'none',
-                      externals: {
-                          vue: 'Vue'
-                      },
-                      optimization: {
-                          splitChunks: {
-                              chunks: 'all',
-                              maxInitialRequests: Infinity,
-                              minSize: 0,
-                              name: 'common',
-                              cacheGroups: {
-                                  common: {
-                                      test: /[\\/]node_modules[\\/]/,
-                                      chunks: 'initial',
-                                      priority: 2,
-                                      minChunks: 2
-                                  }
-                              }
-                          }
-                      }
+                      devtool: 'none'
                   }
                 : {
-                      //   分析模式下添加
-                      //   plugins: [
-                      //       new BundleAnalyzerPlugin({analyzerMode: 'static'})
-                      //   ],
                       devtool: 'cheap-module-eval-source-map',
-                      externals: {
-                          // 依赖vue cdn
-                          vue: 'Vue'
-                      },
-                      optimization: {
-                          splitChunks: {
-                              cacheGroups: {
-                                  node_modules: {
-                                      test: /[\\/]node_modules[\\/]/,
-                                      chunks: 'initial',
-                                      priority: 2,
-                                      // used by chunkFilename
-                                      name(module, chunks, cacheGroupKey) {
-                                          if (
-                                              chunks.length ===
-                                              Object.keys(config.entry).length
-                                          ) {
-                                              return `common/vendors/${cacheGroupKey}`;
-                                          } else {
-                                              return `${chunks[0].name}/vendors/${cacheGroupKey}`;
-                                          }
-                                      }
-                                  }
-                              }
-                          }
-                      },
                       plugins: [
-                          new webpack.DefinePlugin({
-                              'process.env.NODE_ENV': JSON.stringify(
-                                  process.env.NODE_ENV
-                              ),
-                              'process.env.entrys': JSON.stringify(config.entry)
-                          }),
                           new EmitAll()
                       ]
                   }

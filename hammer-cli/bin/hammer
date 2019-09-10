@@ -34,11 +34,11 @@ commander()
         console.log('放置项目');
     })
     .addCommander('version', () => {
-        console.log(`current version: ${pck.version}`);
+        console.log(`${pck.name} version: ${pck.version}`);
     })
-    .addCommander('run', ({dev, build}) => {
-        process.env.NODE_ENV = 'production'
-        if (dev) process.env.NODE_ENV = 'development'
+    .addCommander('run', ({dev, build, analyzer}) => {
+        process.env.NODE_ENV = 'production';
+        if (dev) process.env.NODE_ENV = 'development';
         findCore('babel.config');
         connectHammer(hammer => {
             if (dev) {
@@ -46,7 +46,8 @@ commander()
             }
             if (build) {
                 buildClient(hammer.config, {
-                    watch: dev
+                    watch: dev,
+                    analyzer
                 });
             }
             hammer.start(() => {
@@ -55,6 +56,10 @@ commander()
         });
     })
     .addCommander('build', () => {
-        console.log('打包');
+        process.env.NODE_ENV = 'production';
+        findCore('babel.config');
+        connectHammer(hammer => {
+            buildClient(hammer.config);
+        });
     })
     .invoke();

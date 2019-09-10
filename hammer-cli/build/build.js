@@ -1,8 +1,9 @@
 const glob = require('glob');
 const findCore = require('../utils/findCore');
 const script = require('./script');
+const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
 
-module.exports = (hammerConf, {watch}) => {
+module.exports = (hammerConf, {watch, analyzer}) => {
     const {dist} = hammerConf;
     const config = findCore('config');
     const pagePath = config.path.page;
@@ -20,8 +21,10 @@ module.exports = (hammerConf, {watch}) => {
             // chunkFilename applied to non-entry
             chunkFilename: '[name].[chunkhash].js',
             publicPath: '/'
-        }
+        },
+        plugins: []
     };
+    analyzer && webpackConf.plugins.push(new BundleAnalyzerPlugin());
     const entryFileName = '/index.js';
     glob.sync(`${pagePath}/**${entryFileName}`).forEach(pageFile => {
         const key = pageFile.replace(pagePath, '').replace(entryFileName, '');

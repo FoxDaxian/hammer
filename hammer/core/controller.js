@@ -111,7 +111,6 @@ module.exports = hammer => {
             // ctx.services
 
             // 执行对应路由的action, 把结果赋给body
-            // TODO: 注入service？
             const likeMiddleWare = await matched.controller.action.call(null, {
                 params,
                 query

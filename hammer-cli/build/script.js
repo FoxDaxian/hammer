@@ -82,13 +82,6 @@ module.exports = (config, hammerConf) => {
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
             }),
-            new CopyPlugin([
-                {
-                    from: hammerConf.path.static,
-                    to: hammerConf.path.dist,
-                    ignore: ['.DS_Store']
-                }
-            ]),
             new HappyPack({
                 id: 'babel-loader',
                 threads: osLen,
@@ -144,7 +137,14 @@ module.exports = (config, hammerConf) => {
                 chunkFilename: '[id].[chunkhash].css', // TODO
                 ignoreOrder: false // Enable to remove warnings about conflicting order
             }),
-            new CleanWebpackPlugin()
+            new CleanWebpackPlugin(),
+            new CopyPlugin([
+                {
+                    from: hammerConf.path.static,
+                    to: hammerConf.path.dist,
+                    ignore: ['.DS_Store']
+                }
+            ])
         ],
         resolve: {
             extensions: ['.js', '.jsx', '.json'],
@@ -198,9 +198,7 @@ module.exports = (config, hammerConf) => {
                   }
                 : {
                       devtool: 'cheap-module-eval-source-map',
-                      plugins: [
-                          new EmitAll()
-                      ]
+                      plugins: [new EmitAll()]
                   }
         ),
         (err, stats) => {

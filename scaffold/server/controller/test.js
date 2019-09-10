@@ -29,6 +29,7 @@ export default {
         method: 'post',
         async action(options, {body}) {
             body = await body();
+            console.log(body, '=body');
             return await json({
                 name: 'fox接口'
             });

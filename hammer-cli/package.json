@@ -1,0 +1,37 @@
+{
+    "name": "hammer",
+    "version": "0.0.1",
+    "description": "",
+    "bin": {
+        "hammer": "./bin/hammer"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@babel/core": "^7.5.5",
+        "@babel/plugin-transform-runtime": "^7.5.5",
+        "@babel/preset-env": "^7.5.5",
+        "babel-loader": "^8.0.6",
+        "babel-plugin-syntax-jsx": "^6.18.0",
+        "babel-plugin-transform-vue-jsx": "^3.7.0",
+        "chalk": "^2.4.2",
+        "clean-webpack-plugin": "^3.0.0",
+        "copy-webpack-plugin": "^5.0.4",
+        "css-loader": "^3.2.0",
+        "glob": "^7.1.4",
+        "happypack": "^5.0.1",
+        "mini-css-extract-plugin": "^0.8.0",
+        "minimist": "^1.2.0",
+        "node-sass": "^4.12.0",
+        "sass-loader": "^7.1.0",
+        "url-loader": "^2.1.0",
+        "webpack": "^4.39.1",
+        "webpack-bundle-analyzer": "^3.4.1",
+        "webpack-merge": "^4.2.1"
+    },
+    "devDependencies": {}
+}

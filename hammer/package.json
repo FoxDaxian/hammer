@@ -1,0 +1,44 @@
+{
+    "name": "hammer",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@babel/core": "^7.5.5",
+        "@babel/plugin-transform-modules-commonjs": "^7.5.0",
+        "@babel/preset-env": "^7.5.5",
+        "@babel/register": "^7.4.4",
+        "babel-loader": "^8.0.6",
+        "babel-plugin-add-module-exports": "^1.0.2",
+        "babel-plugin-module-resolver": "^3.2.0",
+        "babel-plugin-syntax-jsx": "^6.18.0",
+        "babel-plugin-transform-vue-jsx": "^3.7.0",
+        "chalk": "^2.4.2",
+        "core-js": "^3.1.4",
+        "css-loader": "^3.2.0",
+        "glob": "^7.1.4",
+        "koa": "^2.7.0",
+        "mime": "^2.4.4",
+        "node-sass": "^4.12.0",
+        "path-to-regexp": "^3.0.0",
+        "regenerator-runtime": "^0.13.2",
+        "sass-loader": "^7.1.0",
+        "strip-indent": "^3.0.0",
+        "url": "^0.11.0",
+        "webpack": "^4.39.1"
+    },
+    "bundleDependencies": false,
+    "deprecated": false,
+    "peerDependencies": {
+        "comment": "TODO: 这里是否有必要需要依赖宿主的？",
+        "vue": ">2.x",
+        "vue-server-renderer": ">2.x"
+    },
+    "devDependencies": {}
+}

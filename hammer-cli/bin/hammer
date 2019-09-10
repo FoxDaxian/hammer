@@ -1,0 +1,60 @@
+#!/usr/bin/env node
+
+// if(local() && self() !== local()){
+//   spawnSync(local(), process.argv.slice(2), {
+//     stdio: 'inherit'
+//   });
+//   process.exit();
+// }
+
+// hammer: 千斤顶
+// 参数:
+// version run help build get
+
+const commander = require('../utils/commander.js');
+const pck = require('../package.json');
+const findCore = require('../utils/findCore');
+const hmr = require('../utils/hmr');
+const connectHammer = require('../utils/connectHammer');
+const buildClient = require('../build');
+
+commander()
+    .addCommander('help', () => {
+        console.log(`=====  hammer - ${pck.version}  =====`);
+        console.log('=                          =');
+        console.log('=      hammer get          =');
+        console.log('=      hammer build        =');
+        console.log('=      hammer run          =');
+        console.log('=      hammer version      =');
+        console.log('=      hammer help         =');
+        console.log('=                          =');
+        console.log('============================');
+    })
+    .addCommander('get', () => {
+        console.log('放置项目');
+    })
+    .addCommander('version', () => {
+        console.log(`current version: ${pck.version}`);
+    })
+    .addCommander('run', ({dev, build}) => {
+        process.env.NODE_ENV = 'production'
+        if (dev) process.env.NODE_ENV = 'development'
+        findCore('babel.config');
+        connectHammer(hammer => {
+            if (dev) {
+                hmr(hammer);
+            }
+            if (build) {
+                buildClient(hammer.config, {
+                    watch: dev
+                });
+            }
+            hammer.start(() => {
+                console.log('监听成功');
+            });
+        });
+    })
+    .addCommander('build', () => {
+        console.log('打包');
+    })
+    .invoke();

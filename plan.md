@@ -10,10 +10,9 @@
 [x] 解析body
 [x] 重定向
 [x] node层面全局数据注入
-[ ] watch 根据内容hash来决定是否更新 https://thisdavej.com/how-to-watch-for-files-changes-in-node-js/
+[ ] watch 根据内容hash来决定是否更新, 不实用
 [ ] 各种类型的请求处理
 [ ] 内容pipe输出, 比如post请求，等等
-[ ] 增加debug
 
 
 ### webpack

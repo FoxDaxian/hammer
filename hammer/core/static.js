@@ -3,14 +3,8 @@ const path = require('path');
 const utils = require('../utils');
 const mime = require('mime');
 const fs = require('fs');
-const crypto = require('crypto');
 const chalk = require('chalk');
 
-function getHash(name) {
-    const hash = crypto.createHash('md5');
-    hash.update(name);
-    return hash.digest('hex');
-}
 
 module.exports = hammer => {
     const distPath = hammer.config.path.dist;
@@ -49,13 +43,13 @@ module.exports = hammer => {
 
         // https://harttle.land/2017/04/04/using-http-cache.html
         ctx.response.set('Cache-Control', 'public, max-age=604800');
-        let etag = getHash(`${stat.mtime}.${stat.size}`);
+        let etag = utils.getHash(`${stat.mtime}.${stat.size}`);
         ctx.response.set('etag', etag);
         if (ctx.request.get('if-none-match') === etag) {
             ctx.status = 304;
             return;
         }
-        etag = getHash(`${stat.mtime}.${stat.size}`);
+        etag = utils.getHash(`${stat.mtime}.${stat.size}`);
         ctx.response.set('etag', etag);
         ctx.set('Content-Length', stat.size);
         ctx.set('Content-Type', contentType + `; charset=${'UTF-8'}`);

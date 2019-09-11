@@ -3,21 +3,17 @@ const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const merge = require('webpack-merge');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
-const crypto = require('crypto');
 const HappyPack = require('happypack');
 const CopyPlugin = require('copy-webpack-plugin');
 const findCore = require('../utils/findCore');
 const utils = findCore('utils');
 const os = require('os');
+const TerserPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const osLen = os.cpus().length;
 const happyThreadPool = HappyPack.ThreadPool({size: 5});
 const cwd = process.cwd();
-function getHash(name) {
-    const hash = crypto.createHash('md5');
-    hash.update(name);
-    return hash.digest('hex');
-}
 
 // const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 
@@ -194,7 +190,20 @@ module.exports = (config, hammerConf) => {
                 ? // 这是生产环境
                   {
                       // TODO: 把下面的换到上面来
-                      devtool: 'none'
+                      devtool: 'none',
+                      optimization: {
+                          minimizer: [
+                              new TerserPlugin({
+                                  cache: true,
+                                  parallel: true,
+                                  sourceMap: false,
+                                  terserOptions: {
+                                      // https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
+                                  }
+                              }),
+                              new OptimizeCSSAssetsPlugin({})
+                          ]
+                      }
                   }
                 : {
                       devtool: 'cheap-module-eval-source-map',

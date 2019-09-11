@@ -7,6 +7,7 @@ const utils = findCore('utils');
 const pathToRegexp = findCore('node_modules/path-to-regexp');
 const configPath = config.path;
 
+
 const canIgnore = path => {
     return !/\.(js|jsx)$/.test(path);
 };

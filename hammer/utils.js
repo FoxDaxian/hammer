@@ -3,8 +3,16 @@ const chalk = require('chalk');
 const cwd = process.cwd();
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const extnames = ['.js'];
+
+
+function getHash(name) {
+    const hash = crypto.createHash('md5');
+    hash.update(name);
+    return hash.digest('hex');
+}
 
 // get key
 function getPartialPath(basePath, filePath) {
@@ -139,5 +147,6 @@ module.exports = {
     getMiddlewares,
     require: _require,
     getMwsContext,
-    merge
+    merge,
+    getHash
 };

@@ -104,7 +104,9 @@ module.exports = hammer => {
                     try {
                         await onReadyPromise(router);
                     } catch (e) {
-                        console.log(chalk.red('路由匹配失败'));
+                        if (process.env.NODE_ENV !== 'production') {
+                            console.log(chalk.red('路由匹配失败'));
+                        }
                     }
 
                     const matchedComponents =
@@ -136,13 +138,15 @@ module.exports = hammer => {
                                     'AsyncFunction'
                                 )
                             ) {
-                                console.log(
-                                    `do not accept asynchronous functions: ${chalk.yellow(
-                                        matchedComponents[
-                                            i
-                                        ].nodeBeforeCreate.toString()
-                                    )}`
-                                );
+                                if (process.env.NODE_ENV !== 'production') {
+                                    console.log(
+                                        `do not accept asynchronous functions: ${chalk.yellow(
+                                            matchedComponents[
+                                                i
+                                            ].nodeBeforeCreate.toString()
+                                        )}`
+                                    );
+                                }
                             } else {
                                 if (process.env.NODE_ENV !== 'production') {
                                     console.log(
@@ -182,8 +186,9 @@ module.exports = hammer => {
                         state: store ? JSON.stringify(store.state) : null
                     });
                 } catch (e) {
-                    console.log(e, '==');
-                    console.log(chalk.red('please check app entry files'));
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log(chalk.red('please check app entry files'));
+                    }
                 }
                 break;
             case 'response':

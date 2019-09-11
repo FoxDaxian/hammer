@@ -81,7 +81,10 @@ function _require(filepath, {cache = true, context = null} = {}) {
         modPath = resolvePath(filepath);
     }
     if (!modPath) {
-        return console.log(chalk.red(`module ${filepath} is not found`));
+        if (process.env.NODE_ENV !== 'production') {
+            console.log(chalk.red(`module ${filepath} is not found`));
+        }
+        return;
     }
     if (process.env.NODE_ENV === 'development' && !cache) {
         delete require.cache[modPath];
@@ -105,7 +108,7 @@ function getMwsContext() {
 
 function merge(target) {
     target = {...target};
-    if (!isTypeEqual(target, 'object')) {
+    if (!isTypeEqual(target, 'object') && process.env.NODE_ENV !== 'production') {
         return console.log(chalk.red("can't merge non Object"));
     }
     for (let i = 1, len = arguments.length; i < len; i++) {

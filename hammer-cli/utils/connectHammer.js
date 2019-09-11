@@ -6,7 +6,7 @@ const cwd = process.cwd();
 
 module.exports = cb => {
     const app = utils.require(path.resolve(cwd));
-    if (!app) {
+    if (!app && process.env.NODE_ENV !== 'production') {
         console.log(chalk.red("Can't find hammer instance, please sure."));
         process.exit(1);
     }

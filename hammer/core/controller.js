@@ -11,7 +11,7 @@ module.exports = hammer => {
     glob.sync(`${config.path.controller}/**/*.js`).forEach(controllerFile => {
         const mod = utils.require(controllerFile);
         for (let k in mod) {
-            if (hammer.config.controllers[k]) {
+            if (hammer.config.controllers[k] && process.env.NODE_ENV !== 'production') {
                 console.log(
                     chalk.red(
                         `already has: ${k}, please check other controller files`

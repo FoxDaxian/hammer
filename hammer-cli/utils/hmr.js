@@ -7,9 +7,17 @@ const utils = findCore('utils');
 const pathToRegexp = findCore('node_modules/path-to-regexp');
 const configPath = config.path;
 
-
 const canIgnore = path => {
     return !/\.(js|jsx)$/.test(path);
+};
+
+const logError = (eventType, error) => {
+    console.log(error.message);
+    console.log(
+        chalk.red(
+            `an error occurred when trigger '${eventType}' event. from controller`
+        )
+    );
 };
 
 let fsTimer = null;
@@ -25,6 +33,12 @@ const controller = hammer => {
         (eventType, filename) => {
             // forbid invoke twice
             if (fsTimer === null) {
+                if (eventType.toLocaleLowerCase() !== 'rename') {
+                    fsTimer = setTimeout(() => {
+                        clearTimeout(fsTimer);
+                        fsTimer = null;
+                    }, 1000);
+                }
                 try {
                     if (canIgnore(filename)) return;
                     const filePath = path.resolve(watchPath, filename);
@@ -55,20 +69,9 @@ const controller = hammer => {
                         };
                     }
 
-                    console.log(chalk.blue('controller reload'));
-
-                    if (eventType.toLocaleLowerCase() !== 'rename') {
-                        fsTimer = setTimeout(() => {
-                            clearTimeout(fsTimer);
-                            fsTimer = null;
-                        }, 1000);
-                    }
+                    console.log(chalk.blue('\ncontroller reload\n'));
                 } catch (e) {
-                    console.log(
-                        chalk.red(
-                            `an error occurred when trigger '${eventType}' event. from controller`
-                        )
-                    );
+                    logError(eventType, e);
                 }
             }
         }
@@ -87,6 +90,12 @@ const client = hammer => {
         (eventType, filename) => {
             // forbid invoke twice
             if (fsTimer === null) {
+                if (eventType.toLocaleLowerCase() !== 'rename') {
+                    fsTimer = setTimeout(() => {
+                        clearTimeout(fsTimer);
+                        fsTimer = null;
+                    }, 1000);
+                }
                 try {
                     // if (canIgnore(filename)) return;
                     const filePath = path.resolve(watchPath, filename);
@@ -101,20 +110,9 @@ const client = hammer => {
                         }
                     }
 
-                    console.log(chalk.blue('client reload'));
-
-                    if (eventType.toLocaleLowerCase() !== 'rename') {
-                        fsTimer = setTimeout(() => {
-                            clearTimeout(fsTimer);
-                            fsTimer = null;
-                        }, 1000);
-                    }
+                    console.log(chalk.blue('\nclient reload\n'));
                 } catch (e) {
-                    console.log(
-                        chalk.red(
-                            `an error occurred when trigger '${eventType}' event. from controller`
-                        )
-                    );
+                    logError(eventType, e);
                 }
             }
         }
@@ -153,6 +151,12 @@ const middleware = hammer => {
         (eventType, filename) => {
             // forbid invoke twice
             if (fsTimer === null) {
+                if (eventType.toLocaleLowerCase() !== 'rename') {
+                    fsTimer = setTimeout(() => {
+                        clearTimeout(fsTimer);
+                        fsTimer = null;
+                    }, 1000);
+                }
                 if (canIgnore(filename)) return;
                 const filePath = path.resolve(watchPath, filename);
                 if (
@@ -163,24 +167,16 @@ const middleware = hammer => {
                     if (utils.resolvePath(filePath)) {
                         _middleware(hammer);
 
-                        console.log(chalk.blue('middleware reload'));
+                        console.log(chalk.blue('\nmiddleware reload\n'));
                     } else {
                         if (eventType === 'rename') {
                             return;
                         }
-                        console.log(
-                            chalk.red(
-                                `an error occurred when trigger '${eventType}' event. from middleware`
-                            )
+                        logError(
+                            eventType,
+                            new Error(`can't find ${filePath}`)
                         );
                     }
-                }
-
-                if (eventType.toLocaleLowerCase() !== 'rename') {
-                    fsTimer = setTimeout(() => {
-                        clearTimeout(fsTimer);
-                        fsTimer = null;
-                    }, 1000);
                 }
             }
         }
@@ -198,6 +194,12 @@ const _config = hammer => {
         (eventType, filename) => {
             // forbid invoke twice
             if (fsTimer === null) {
+                if (eventType.toLocaleLowerCase() !== 'rename') {
+                    fsTimer = setTimeout(() => {
+                        clearTimeout(fsTimer);
+                        fsTimer = null;
+                    }, 1000);
+                }
                 try {
                     if (canIgnore(filename)) return;
                     if (!/development\.js$|default\.js$/.test(filename)) {
@@ -223,20 +225,9 @@ const _config = hammer => {
                     // 修改config的时候 要重启其他，middleware controls
                     _middleware(hammer);
 
-                    console.log(chalk.blue('config reload'));
-
-                    if (eventType.toLocaleLowerCase() !== 'rename') {
-                        fsTimer = setTimeout(() => {
-                            clearTimeout(fsTimer);
-                            fsTimer = null;
-                        }, 1000);
-                    }
+                    console.log(chalk.blue('\nconfig reload\n'));
                 } catch (e) {
-                    console.log(
-                        chalk.red(
-                            `an error occurred when trigger '${eventType}' event. from config`
-                        )
-                    );
+                    logError(eventType, e);
                 }
             }
         }
@@ -252,31 +243,28 @@ const service = hammer => {
         },
         (eventType, filename) => {
             if (fsTimer === null) {
+                if (eventType.toLocaleLowerCase() !== 'rename') {
+                    fsTimer = setTimeout(() => {
+                        clearTimeout(fsTimer);
+                        fsTimer = null;
+                    }, 1000);
+                }
                 try {
                     if (canIgnore(filename)) return;
 
-                    const mod = utils.require(path.join(servicePath, filename), {
-                        cache: false
-                    });
+                    const mod = utils.require(
+                        path.join(servicePath, filename),
+                        {
+                            cache: false
+                        }
+                    );
                     const key = path.basename(filename).replace('.js', '');
                     if (key !== 'renderer') {
                         hammer.services[key] = mod;
-                        console.log(chalk.blue('service reload'));
-                    }
-
-                    if (eventType.toLocaleLowerCase() !== 'rename') {
-                        fsTimer = setTimeout(() => {
-                            clearTimeout(fsTimer);
-                            fsTimer = null;
-                        }, 1000);
+                        console.log(chalk.blue('\nservice reload\n'));
                     }
                 } catch (e) {
-                    console.log(e, '==');
-                    console.log(
-                        chalk.red(
-                            `an error occurred when trigger '${eventType}' event. from service`
-                        )
-                    );
+                    logError(eventType, e);
                 }
             }
         }

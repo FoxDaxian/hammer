@@ -4,18 +4,17 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const merge = require('webpack-merge');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const HappyPack = require('happypack');
-const CopyPlugin = require('copy-webpack-plugin');
 const findCore = require('../utils/findCore');
 const utils = findCore('utils');
 const os = require('os');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const fs = require('fs');
+const ora = require('ora');
 
 const osLen = os.cpus().length;
 const happyThreadPool = HappyPack.ThreadPool({size: 5});
 const cwd = process.cwd();
-
-// const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 
 module.exports = (config, hammerConf) => {
     const envConf = utils.merge(
@@ -75,6 +74,12 @@ module.exports = (config, hammerConf) => {
             ]
         },
         plugins: [
+            new Loading(),
+            new CopyAssets({
+                from: hammerConf.path.static,
+                to: hammerConf.path.dist,
+                ignore: ['.DS_Store']
+            }),
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
             }),
@@ -127,20 +132,12 @@ module.exports = (config, hammerConf) => {
                     require.resolve('sass-loader')
                 ]
             }),
-            // new VueSSRClientPlugin()
             new MiniCssExtractPlugin({
                 filename: '[name]/css/main.[hash].css',
                 chunkFilename: '[id].[chunkhash].css', // TODO
                 ignoreOrder: false // Enable to remove warnings about conflicting order
             }),
-            new CleanWebpackPlugin(),
-            new CopyPlugin([
-                {
-                    from: hammerConf.path.static,
-                    to: hammerConf.path.dist,
-                    ignore: ['.DS_Store']
-                }
-            ])
+            new CleanWebpackPlugin()
         ],
         resolve: {
             extensions: ['.js', '.jsx', '.json'],
@@ -182,58 +179,81 @@ module.exports = (config, hammerConf) => {
             }
         }
     };
-    webpack(
-        merge(
-            webpackConf,
-            config,
-            isProd
-                ? // 这是生产环境
-                  {
-                      // TODO: 把下面的换到上面来
-                      devtool: 'none',
-                      optimization: {
-                          minimizer: [
-                              new TerserPlugin({
-                                  cache: true,
-                                  parallel: true,
-                                  sourceMap: false,
-                                  terserOptions: {
-                                      // https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
-                                  }
-                              }),
-                              new OptimizeCSSAssetsPlugin({})
-                          ]
-                      }
+    const webpackConfig = merge(
+        webpackConf,
+        config,
+        isProd
+            ? // 这是生产环境
+              {
+                  // TODO: 把下面的换到上面来
+                  devtool: 'none',
+                  optimization: {
+                      minimizer: [
+                          new TerserPlugin({
+                              cache: true,
+                              parallel: true,
+                              sourceMap: false,
+                              terserOptions: {
+                                  // https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
+                              }
+                          }),
+                          new OptimizeCSSAssetsPlugin({})
+                      ]
                   }
-                : {
-                      devtool: 'cheap-module-eval-source-map',
-                      plugins: [new EmitAll()]
-                  }
-        ),
-        (err, stats) => {
-            if (err) {
-                return console.log('构建出错');
-            }
-            console.log(
-                stats.toString({
-                    all: false,
-                    colors: true,
-                    assets: true,
-                    modules: true,
-                    maxModules: 0,
-                    errors: true,
-                    warnings: true,
-                    moduleTrace: true,
-                    errorDetails: true,
-                    timings: true,
-                    version: true,
-                    chunkOrigins: true,
-                    reasons: true,
-                    publicPath: true
-                })
-            );
-        }
+              }
+            : {
+                  devtool: 'cheap-module-eval-source-map',
+                  plugins: [new EmitAll()]
+              }
     );
+
+    webpack(webpackConfig, (err, stats) => {
+        if (err) {
+            console.log(err, '==');
+            return console.log('===构建出错===');
+        }
+        console.log(
+            stats.toString({
+                all: false,
+                colors: true,
+                assets: true,
+                modules: true,
+                maxModules: 0,
+                errors: true,
+                warnings: true,
+                moduleTrace: true,
+                errorDetails: true,
+                timings: true,
+                version: true,
+                chunkOrigins: true,
+                reasons: true,
+                publicPath: true
+            })
+        );
+    });
+};
+
+function Loading() {}
+Loading.prototype.apply = function(compiler) {
+    let spinner;
+    const beforeHooks = ['run', 'watchRun'];
+    for (let i = 0, len = beforeHooks.length; i < len; i++) {
+        compiler.hooks[beforeHooks[i]].tapAsync('before-run-plugin', function(
+            compilation,
+            callback
+        ) {
+            spinner = ora('building......').start();
+            callback();
+        });
+    }
+
+    compiler.hooks.done.tapAsync('done-plugin', function(
+        compilation,
+        callback
+    ) {
+        spinner && spinner.stop();
+        callback();
+    });
 };
 
 function EmitAll() {}
@@ -255,6 +275,54 @@ EmitAll.prototype.apply = function(compiler) {
             }
         }
 
+        callback();
+    });
+};
+
+function CopyAssets(options) {
+    this.options = options;
+}
+CopyAssets.prototype.apply = function(compiler) {
+    const options = this.options;
+    compiler.hooks.afterEmit.tapAsync(this.constructor.name, function(
+        compilation,
+        callback
+    ) {
+        function copyAction(from, to, ignore) {
+            _copy(from, to, ignore);
+            function _copy(from, to, ignore) {
+                if (!utils.exist(to)) {
+                    fs.mkdirSync(to);
+                }
+                fs.readdir(from, function(err, files) {
+                    if (err) {
+                        return console.log('===copyAssets get error===');
+                    }
+                    for (let i = 0, len = files.length; i < len; i++) {
+                        const curFile = files[i];
+                        if (ignore.indexOf(curFile) !== -1) {
+                            continue;
+                        }
+                        const joinPath = path.join(from, curFile);
+                        utils.fileType(joinPath).then(res => {
+                            if (res instanceof Error) {
+                                console.log('===get file type error===');
+                            } else {
+                                to = path.join(to, curFile);
+                                if (res.isFile()) {
+                                    fs.createReadStream(joinPath).pipe(
+                                        fs.createWriteStream(to)
+                                    );
+                                } else if (res.isDirectory()) {
+                                    _copy(joinPath, to, ignore);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        }
+        copyAction(options.from, options.to, options.ignore);
         callback();
     });
 };

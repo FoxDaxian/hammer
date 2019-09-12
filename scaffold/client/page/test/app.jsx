@@ -1,13 +1,13 @@
 import './index.scss';
-// import lodash from 'lodash';
+import lodash from 'lodash';
 import config from '@config/development';
 import myHeader from '@components/header.jsx';
-// import moment from 'moment';
+import moment from 'moment';
 
 export default {
     data() {
         return {
-            test: '点击2事件'
+            test: '点击2事件1212'
         };
     },
     components: {

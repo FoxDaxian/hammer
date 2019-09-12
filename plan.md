@@ -10,7 +10,7 @@
 [x] 解析body
 [x] 重定向
 [x] node层面全局数据注入
-[ ] watch 根据内容hash来决定是否更新, 不实用
+[x] watch 根据内容hash来决定是否更新, 不实用
 [ ] 各种类型的请求处理
 [ ] 内容pipe输出, 比如post请求，等等
 
@@ -22,9 +22,10 @@ https://hackernoon.com/the-100-correct-way-to-split-your-chunks-with-webpack-f8a
 [x] 根据入口进行合并打包
 [x] hash文件检测注入
 [x] 静态资源
-[ ] 打包动画
-[ ] 打包时间过长
+[x] 打包动画
+[ ] 打包时间过长 http://louiszhai.github.io/2019/01/04/webpack4/#%E9%9D%A2%E5%90%91tree-shaking%EF%BC%8C%E7%BA%A6%E6%9D%9F%E7%BC%96%E7%A0%81
 [ ] tree sharking 树抖 webpack自带？写的时候是否需要更换方式
+[ ] 如何增加dll，不重复打包，router vux 啥的
 
 ### vue
 [x] vue-ssr
@@ -36,7 +37,7 @@ https://hackernoon.com/the-100-correct-way-to-split-your-chunks-with-webpack-f8a
 [ ] css 相关，比如按需加载 首屏关键帧css读取
 
 ### babel
-[ ] babel分析 => 优化
+[x] babel分析 => 优化
 [ ] 支持babel配置，自动读取scaffold中的
 
 ### 整合

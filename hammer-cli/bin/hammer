@@ -41,25 +41,21 @@ commander()
         if (dev) process.env.NODE_ENV = 'development';
         findCore('babel.config');
         connectHammer(hammer => {
-            if (dev) {
-                hmr(hammer);
-            }
+            hammer.start();
             if (build) {
                 buildClient(hammer.config, {
                     watch: dev,
                     analyzer
                 });
             }
-            hammer.start(() => {
-                console.log('监听成功');
-            });
+            if (dev) {
+                hmr(hammer);
+            }
         });
     })
     .addCommander('build', () => {
         process.env.NODE_ENV = 'production';
-        findCore('babel.config');
-        connectHammer(hammer => {
-            buildClient(hammer.config);
-        });
+        const hammerCfg = findCore('config');
+        buildClient(hammerCfg);
     })
     .invoke();

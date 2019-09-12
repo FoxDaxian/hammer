@@ -1,9 +1,9 @@
 import './index.css';
 import btn from '@components/btn';
-import merge from 'lodash/merge';
-// import lodash from 'lodash';
+// import merge from 'lodash/merge';
+import lodash from 'lodash';
 import {mapState, mapMutations} from 'vuex';
-// console.log(lodash);
+console.log(typeof lodash, '==lodash');
 
 export default {
     data() {
@@ -20,7 +20,7 @@ export default {
     methods: {
         onChange(e) {},
         click() {
-            this.test = '跳转过去了';
+            this.test = '跳转过去了测试点什么';
             this.$router.push('/home/test');
         },
         click1() {

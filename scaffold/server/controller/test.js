@@ -41,6 +41,7 @@ export default {
         }
     },
     '/demopage': {
+        // @test
         async action(urlopt, {servicestest, cookies}) {
             // return await redirect('/fff1');
             // const cook = await cookies();

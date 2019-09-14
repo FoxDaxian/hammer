@@ -10,6 +10,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const fs = require('fs');
 const ora = require('ora');
+const Mfs = require('memory-fs');
 
 const osLen = os.cpus().length;
 const happyThreadPool = HappyPack.ThreadPool({size: 5});
@@ -151,10 +152,7 @@ module.exports = (config, hammerConf) => {
             ignored: ['server/**/*.js', 'node_modules', 'dist/**'],
             poll: 1000
         },
-        externals: {
-            // 依赖vue cdn
-            vue: 'Vue'
-        },
+        externals: envConf.externals,
         optimization: {
             splitChunks: {
                 cacheGroups: {
@@ -202,7 +200,7 @@ module.exports = (config, hammerConf) => {
               }
             : {
                   devtool: 'cheap-module-eval-source-map',
-                  plugins: [new EmitAll()]
+                  plugins: [new EmitAll() /**, new Memory() */]
               }
     );
 
@@ -230,6 +228,13 @@ module.exports = (config, hammerConf) => {
             })
         );
     });
+};
+
+function Memory() {}
+Memory.prototype.apply = function(compiler) {
+    const mfs = new Mfs();
+    compiler.outputFileSystem = mfs;
+    console.log(compiler.outputFileSystem);
 };
 
 function Loading() {}
@@ -302,18 +307,22 @@ CopyAssets.prototype.apply = function(compiler) {
                         if (ignore.indexOf(curFile) !== -1) {
                             continue;
                         }
-                        const joinPath = path.join(from, curFile);
-                        utils.fileType(joinPath).then(res => {
+                        const fromAbsolutePath = path.join(from, curFile);
+                        utils.fileType(fromAbsolutePath).then(res => {
                             if (res instanceof Error) {
                                 console.log('===get file type error===');
                             } else {
-                                to = path.join(to, curFile);
+                                toAbsolutePath = path.join(to, curFile);
                                 if (res.isFile()) {
-                                    fs.createReadStream(joinPath).pipe(
-                                        fs.createWriteStream(to)
+                                    fs.createReadStream(fromAbsolutePath).pipe(
+                                        fs.createWriteStream(toAbsolutePath)
                                     );
                                 } else if (res.isDirectory()) {
-                                    _copy(joinPath, to, ignore);
+                                    _copy(
+                                        fromAbsolutePath,
+                                        toAbsolutePath,
+                                        ignore
+                                    );
                                 }
                             }
                         });

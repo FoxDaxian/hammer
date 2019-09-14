@@ -1,0 +1,13 @@
+/* fox大仙 */
+#app{
+    color: red;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    border: 1px solid blue;
+    box-sizing: border-box;
+}
+.routerviewwrap{
+    border:1px solid black;
+    height: 50px;
+}

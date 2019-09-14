@@ -187,7 +187,7 @@ module.exports = hammer => {
                     });
                 } catch (e) {
                     if (process.env.NODE_ENV !== 'production') {
-                        console.log(chalk.red('please check app entry files'));
+                        console.log(chalk.red('please check app entry files:\n', e, '\n'));
                     }
                 }
                 break;

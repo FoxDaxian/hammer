@@ -14,10 +14,7 @@
 const commander = require('../utils/commander.js');
 const pck = require('../package.json');
 const findCore = require('../utils/findCore');
-const hmr = require('../utils/hmr');
-const connectHammer = require('../utils/connectHammer');
-const buildClient = findCore('clientBuild');
-
+const getProject = require('../scaffold/');
 
 commander()
     .addCommander('help', () => {
@@ -31,16 +28,22 @@ commander()
         console.log('=                          =');
         console.log('============================');
     })
-    .addCommander('get', () => {
-        console.log('放置项目');
+    .addCommander('get', ({name}) => {
+        // ../../hammer-cli/bin/hammer get --name hh
+        getProject(name);
     })
     .addCommander('version', () => {
         console.log(`${pck.name} version: ${pck.version}`);
     })
     .addCommander('run', ({dev, build, analyzer}) => {
+        // ../hammer-cli/bin/hammer run --dev --build
+        // ../hammer-cli/bin/hammer run --dev --build --analyzer
+        const connectHammer = require('../utils/connectHammer');
+        const hmr = require('../utils/hmr');
         process.env.NODE_ENV = 'production';
-        if (dev) process.env.NODE_ENV = 'development';
+        const buildClient = findCore('clientBuild');
         findCore('babelEnv');
+        if (dev) process.env.NODE_ENV = 'development';
         connectHammer(hammer => {
             hammer.start();
             if (build) {
@@ -55,8 +58,10 @@ commander()
         });
     })
     .addCommander('build', () => {
-        process.env.NODE_ENV = 'production';
+        // ../hammer-cli/bin/hammer build
+        const buildClient = findCore('clientBuild');
         const hammerCfg = findCore('config');
+        process.env.NODE_ENV = 'production';
         buildClient(hammerCfg);
     })
     .invoke();

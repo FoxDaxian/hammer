@@ -1,5 +1,7 @@
 ### node
 [x] koa依赖
+[x] 中间件 
+[x] server（服务）
 [x] 自定义渲染模板
 [x] server注入state
 [x] 缓存相关
@@ -23,10 +25,12 @@ https://hackernoon.com/the-100-correct-way-to-split-your-chunks-with-webpack-f8a
 [x] hash文件检测注入
 [x] 静态资源
 [x] 打包动画
-[x] 开发环境，打包到内存中
+[ ] 开发环境，打包到内存中 一个页面 一个 html 倒是可以，但是vuex数据什么的如何注入呢？
+[ ] 浏览器热刷新
+[x] externals 可配置，需要自己添加cdn依赖
 [ ] 打包时间过长 http://louiszhai.github.io/2019/01/04/webpack4/#%E9%9D%A2%E5%90%91tree-shaking%EF%BC%8C%E7%BA%A6%E6%9D%9F%E7%BC%96%E7%A0%81
 [ ] tree sharking 树抖 webpack自带？写的时候是否需要更换方式
-[ ] 如何增加dll，不重复打包，router vux 啥的
+[x] 如何增加dll，不重复打包，router vux 啥的 => 采用externals，否则html难维护
 
 ### vue
 [x] vue-ssr
@@ -43,21 +47,17 @@ https://hackernoon.com/the-100-correct-way-to-split-your-chunks-with-webpack-f8a
 [x] babel统一依赖
 
 ### 整合
-[x] 中间件 
-[x] server（服务）
+[x] hammer get命令
 [x] 整合 => hammer为核心 hammer-cli读取hammer相关配置、服务等
 [ ] 通用(错误、等等)处理
 
-
-### 百度
-[] nginx转发到node， 待接入的有：Bns，password
-[] 百度rpc
+### 其他
+[ ] 提交前的代码统一格式化
 
 
 
 #### 参考
 [] require 引入 相关知识 [node module文档](https://nodejs.org/docs/latest/api/modules.html#modules_the_module_scope)
-[ ] 增加包分析  https://github.com/danvk/source-map-explorer
 [ ] jsx中写css的方案  style-component 将样式也变成组件
 
 #### 一些理论

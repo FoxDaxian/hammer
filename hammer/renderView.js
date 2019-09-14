@@ -48,7 +48,6 @@ const defaultRender = async config => {
             break;
         }
     }
-
     node_modules = typeof node_modules === 'string' && utils.exist(path.join(distDir, node_modules))
         ? `<script src="${node_modules}" ></script>`
         : '';

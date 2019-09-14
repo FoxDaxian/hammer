@@ -9,7 +9,9 @@
     "keywords": [],
     "author": "",
     "license": "ISC",
+    "注释一下": "TODO: @babel/core会在npm i的时候安装到宿主中，现在是link，好像不生效",
     "dependencies": {
+        "@babel/core": "^7.6.0",
         "@babel/plugin-transform-runtime": "^7.5.5",
         "@babel/preset-env": "^7.5.5",
         "@babel/register": "^7.4.4",
@@ -26,6 +28,7 @@
         "url": "^0.11.0"
     },
     "devDependencies": {
+        "memory-fs": "^0.4.1",
         "babel-loader": "^8.0.6",
         "webpack": "^4.39.1",
         "webpack-bundle-analyzer": "^3.4.1",
@@ -46,8 +49,6 @@
     "bundleDependencies": false,
     "deprecated": false,
     "peerDependencies": {
-        "vue": ">2.x",
-        "vue-server-renderer": ">2.x",
         "@babel/core": ">7.x"
     }
 }

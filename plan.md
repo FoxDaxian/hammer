@@ -23,6 +23,7 @@ https://hackernoon.com/the-100-correct-way-to-split-your-chunks-with-webpack-f8a
 [x] hash文件检测注入
 [x] 静态资源
 [x] 打包动画
+[x] 开发环境，打包到内存中
 [ ] 打包时间过长 http://louiszhai.github.io/2019/01/04/webpack4/#%E9%9D%A2%E5%90%91tree-shaking%EF%BC%8C%E7%BA%A6%E6%9D%9F%E7%BC%96%E7%A0%81
 [ ] tree sharking 树抖 webpack自带？写的时候是否需要更换方式
 [ ] 如何增加dll，不重复打包，router vux 啥的
@@ -38,7 +39,8 @@ https://hackernoon.com/the-100-correct-way-to-split-your-chunks-with-webpack-f8a
 
 ### babel
 [x] babel分析 => 优化
-[ ] 支持babel配置，自动读取scaffold中的
+[x] 支持babel配置，自动读取scaffold中的
+[x] babel统一依赖
 
 ### 整合
 [x] 中间件 

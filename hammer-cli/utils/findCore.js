@@ -9,6 +9,7 @@ module.exports = fileName => {
         return require(hammerPath);
     } catch (e) {
         if (process.env.NODE_ENV !== 'production') {
+            console.log(e);
             console.log(
                 chalk.red(
                     `can't find moudle: '${fileName}', please check your hammer version.`

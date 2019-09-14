@@ -1,11 +1,10 @@
 const glob = require('glob');
-const findCore = require('../utils/findCore');
 const script = require('./script');
 const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
 
 module.exports = (hammerConf, {watch, analyzer}) => {
     const {dist} = hammerConf;
-    const config = findCore('config');
+    const config = require('../config');
     const pagePath = config.path.page;
     const webpackConf = {
         watch,

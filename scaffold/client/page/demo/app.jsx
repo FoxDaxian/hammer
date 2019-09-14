@@ -5,6 +5,19 @@ import lodash from 'lodash';
 import {mapState, mapMutations} from 'vuex';
 console.log(typeof lodash, '==lodash');
 
+function test(option) {
+    return function(target) {
+        console.log('装饰器');
+        target.fox = option;
+    };
+}
+@test('装饰器添加')
+class testDecorator {
+    say() {
+        console.log('你好', testDecorator.fox);
+    }
+}
+
 export default {
     data() {
         return {
@@ -18,6 +31,11 @@ export default {
         ...mapState(['count'])
     },
     methods: {
+        forDecorator() {
+            const decorator = new testDecorator();
+            console.log(decorator);
+            decorator.say();
+        },
         onChange(e) {},
         click() {
             this.test = '跳转过去了测试点什么';
@@ -31,7 +49,8 @@ export default {
         },
         ...mapMutations(['increment'])
     },
-    mounted() {},
+    mounted() {
+    },
     render() {
         return (
             <div id='app' class='appclass'>
@@ -45,7 +64,7 @@ export default {
                 <button onClick={this.click1}>跳转1</button>
                 <button onClick={this.testStore}>store{this.count}</button>
 
-                <img src='/img/qrcode.png' alt='' />
+                <img src='/img/qrcode.png' onClick={this.forDecorator} alt='' />
             </div>
         );
     }

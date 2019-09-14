@@ -16,7 +16,8 @@ const pck = require('../package.json');
 const findCore = require('../utils/findCore');
 const hmr = require('../utils/hmr');
 const connectHammer = require('../utils/connectHammer');
-const buildClient = require('../build');
+const buildClient = findCore('clientBuild');
+
 
 commander()
     .addCommander('help', () => {
@@ -39,7 +40,7 @@ commander()
     .addCommander('run', ({dev, build, analyzer}) => {
         process.env.NODE_ENV = 'production';
         if (dev) process.env.NODE_ENV = 'development';
-        findCore('babel.config');
+        findCore('babelEnv');
         connectHammer(hammer => {
             hammer.start();
             if (build) {

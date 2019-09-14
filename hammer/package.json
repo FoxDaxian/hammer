@@ -10,35 +10,44 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@babel/core": "^7.5.5",
-        "@babel/plugin-transform-modules-commonjs": "^7.5.0",
+        "@babel/plugin-transform-runtime": "^7.5.5",
         "@babel/preset-env": "^7.5.5",
         "@babel/register": "^7.4.4",
-        "babel-loader": "^8.0.6",
-        "babel-plugin-add-module-exports": "^1.0.2",
         "babel-plugin-module-resolver": "^3.2.0",
         "babel-plugin-syntax-jsx": "^6.18.0",
         "babel-plugin-transform-vue-jsx": "^3.7.0",
-        "chalk": "^2.4.2",
         "core-js": "^3.1.4",
-        "css-loader": "^3.2.0",
         "glob": "^7.1.4",
         "koa": "^2.7.0",
         "mime": "^2.4.4",
-        "node-sass": "^4.12.0",
         "path-to-regexp": "^3.0.0",
         "regenerator-runtime": "^0.13.2",
-        "sass-loader": "^7.1.0",
         "strip-indent": "^3.0.0",
-        "url": "^0.11.0",
-        "webpack": "^4.39.1"
+        "url": "^0.11.0"
+    },
+    "devDependencies": {
+        "babel-loader": "^8.0.6",
+        "webpack": "^4.39.1",
+        "webpack-bundle-analyzer": "^3.4.1",
+        "webpack-merge": "^4.2.1",
+        "optimize-css-assets-webpack-plugin": "^5.0.3",
+        "ora": "^3.4.0",
+        "node-sass": "^4.12.0",
+        "sass-loader": "^7.1.0",
+        "terser-webpack-plugin": "^2.0.1",
+        "url-loader": "^2.1.0",
+        "happypack": "^5.0.1",
+        "mini-css-extract-plugin": "^0.8.0",
+        "clean-webpack-plugin": "^3.0.0",
+        "copy-webpack-plugin": "^5.0.4",
+        "css-loader": "^3.2.0",
+        "chalk": "^2.4.2"
     },
     "bundleDependencies": false,
     "deprecated": false,
     "peerDependencies": {
-        "comment": "TODO: 这里是否有必要需要依赖宿主的？",
         "vue": ">2.x",
-        "vue-server-renderer": ">2.x"
-    },
-    "devDependencies": {}
+        "vue-server-renderer": ">2.x",
+        "@babel/core": ">7.x"
+    }
 }

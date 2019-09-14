@@ -1,6 +1,17 @@
 // https://zhuanlan.zhihu.com/p/47044039 同构原理梳理
 import response, {redirect, render, json} from 'hammer/response';
 
+function test() {
+    return function() {
+        console.log('装饰器');
+        return true;
+    };
+}
+@test
+class testDecorator {
+    
+}
+
 export default {
     '/test': {
         method: 'post',
@@ -41,8 +52,9 @@ export default {
         }
     },
     '/demopage': {
-        // @test
         async action(urlopt, {servicestest, cookies}) {
+
+            const decorator = new testDecorator();
             // return await redirect('/fff1');
             // const cook = await cookies();
             // console.log(cook.get());
@@ -52,9 +64,11 @@ export default {
             return await render('demo', {
                 $title: '页面标112题', // 页面元信息
                 state: {
-                    lists: [{
-                        name: '服务端注入的列表长度'
-                    }]
+                    lists: [
+                        {
+                            name: '服务端注入的列表长度'
+                        }
+                    ]
                 } // 注入vuex的state
             });
         }

@@ -1,4 +1,5 @@
 ### node
+
 [x] koa依赖
 [x] 中间件 
 [x] server（服务）
@@ -18,6 +19,7 @@
 
 
 ### webpack
+
 [x] https://medium.com/dailyjs/webpack-4-splitchunks-plugin-d9fbbe091fd0  webpack 分包
 https://hackernoon.com/the-100-correct-way-to-split-your-chunks-with-webpack-f8a9df5b7758
 中文分包 https://imweb.io/topic/5b66dd601402769b60847149
@@ -33,6 +35,7 @@ https://hackernoon.com/the-100-correct-way-to-split-your-chunks-with-webpack-f8a
 [x] 如何增加dll，不重复打包，router vux 啥的 => 采用externals，否则html难维护
 
 ### vue
+
 [x] vue-ssr
 [x] 挂载
 [x] vue-router，引入的vue版本问题，需要需要编译模板，那么不能只用runtime
@@ -42,6 +45,7 @@ https://hackernoon.com/the-100-correct-way-to-split-your-chunks-with-webpack-f8a
 [ ] css 相关，比如按需加载 首屏关键帧css读取
 
 ### babel
+
 [x] babel分析 => 优化
 [x] 支持babel配置，自动读取scaffold中的
 [x] babel统一依赖

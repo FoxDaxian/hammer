@@ -10,6 +10,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const fs = require('fs');
 const ora = require('ora');
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const Mfs = require('memory-fs');
 
 const osLen = os.cpus().length;
@@ -204,7 +205,15 @@ module.exports = (config, hammerConf) => {
               }
     );
 
-    webpack(webpackConfig, (err, stats) => {
+
+    // TODO: 可以根据scrips传递的参数来决定是否启用
+    const smp = new SpeedMeasurePlugin({
+        disable: isProd
+    });
+
+
+
+    webpack(smp.wrap(webpackConfig), (err, stats) => {
         if (err) {
             console.log(err, '==');
             return console.log('===构建出错===');

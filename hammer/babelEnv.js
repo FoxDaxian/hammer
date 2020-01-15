@@ -2,6 +2,7 @@ const path = require('path');
 const utils = require('./utils');
 const cwd = process.cwd();
 const styleExt = ['.scss', '.css', '.sass'];
+// require.extensions have all types load methods
 const claer = ext => (require.extensions[ext] = () => {});
 styleExt.forEach(claer);
 
